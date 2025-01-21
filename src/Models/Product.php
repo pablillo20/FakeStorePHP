@@ -119,6 +119,9 @@ class Product
         if (empty($this->nombre)) {
             self::$errores['nombre'] = 'El nombre es obligatorio';
         }
+        if (empty($this->stock)) {
+            self::$errores['stock'] = 'El stock es obligatorio';
+        }
 
         if (empty($this->descripcion)) {
             self::$errores['descripcion'] = 'La descripción es obligatoria';
@@ -165,7 +168,7 @@ class Product
             self::$errores['precio'] = 'El precio debe ser mayor a cero';
         }
 
-        if (!isset($this->stock) || $this->stock === '') {
+        if ($this->stock === '') {
             self::$errores['stock'] = 'El stock es obligatorio';
         } elseif ($this->stock < 0) {
             self::$errores['stock'] = 'El stock no puede ser negativo';

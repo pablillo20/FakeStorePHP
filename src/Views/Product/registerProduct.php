@@ -1,17 +1,19 @@
 <h1>Registrar Producto</h1>
-<form action="<?=BASE_URL?>product" method="post" class="login">
+<form action="<?= BASE_URL ?>product" method="post" class="login">
+
+
     <!-- Selección de Categoría -->
     <select name="data[categoria_id]" class="form-control m-2">
         <option value="">Selecciona una Categoría</option>
         <?php foreach ($categories as $category): ?>
             <option value="<?= $category->getId() ?>"><?= $category->getName() ?></option>
         <?php endforeach; ?>
-        <?php if (isset($errores['categoria_id'])): ?>
-            <p class="error"><?= htmlspecialchars($errores['categoria_id']) ?></p>
-        <?php endif; ?>
     </select>
-
+    <?php if (isset($errores['categoria_id'])): ?>
+        <p class="error"><?= htmlspecialchars($errores['categoria_id']) ?></p>
+    <?php endif; ?>
     
+
 
     <!-- Otros campos -->
     <input type="text" name="data[nombre]" class="form-control m-2" placeholder="Nombre">
@@ -31,8 +33,6 @@
     <?php if (isset($errores['precio'])): ?>
         <p class="error"><?= htmlspecialchars($errores['precio']) ?></p>
     <?php endif; ?>
-
-
     <input type="text" name="data[stock]" class="form-control m-2" placeholder="Stock">
     <?php if (isset($errores['stock'])): ?>
         <p class="error"><?= htmlspecialchars($errores['stock']) ?></p>
@@ -55,13 +55,14 @@
     <?php if (isset($errores['iamgen'])): ?>
         <p class="error"><?= htmlspecialchars($errores['imagen']) ?></p>
     <?php endif; ?>
-    
+
     <button type="submit" class="btn btn-primary">Registrar</button>
 </form>
 <style>
-    .error{
+    .error {
         color: red;
     }
+
     .form-control {
         width: 21rem;
     }
