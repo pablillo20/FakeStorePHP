@@ -29,8 +29,10 @@ class ProductController
                 $product->sanitize();
                 if ($product->validation()) {
                     try {
+                        $categories = $this->categoryService->getAllCategories();
+
                         $this->productService->registerProduct($product);
-                        $this->pages->render('Product/registerProduct');
+                        $this->pages->render('Product/registerProduct', ['categories' => $categories]);
                     } catch (Exception $e) {
                         $_SESSION['register'] = 'Fail';
                         $_SESSION['errors'] = $e->getMessage();
