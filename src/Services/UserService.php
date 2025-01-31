@@ -18,6 +18,9 @@ class UserService{
     public function login(String $email){
         return $this->userRepository->comprobarCorreo($email);
     }
-    
+
+    public function actualizar(String $email){
+        return $this->userRepository->actualizar($email);
+    }
 }
 ?>

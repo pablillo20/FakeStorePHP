@@ -19,6 +19,10 @@ class Routes{
         });
 
         /*Auth Routes*/
+        Router::add('GET', '/confirmarCuenta/:token', function($token){
+            (new AuthController())->confirmarCuenta($token);
+        });
+
         Router::add('GET', '/register', function(){
             (new AuthController())->register();
         });

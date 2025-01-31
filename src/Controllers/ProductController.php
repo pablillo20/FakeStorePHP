@@ -23,32 +23,36 @@ class ProductController
 
     public function product()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if ($_POST['data']) {
-                $product = Product::fromArray($_POST['data']);
-                $product->sanitize();
-                if ($product->validation()) {
-                    try {
-                        $categories = $this->categoryService->getAllCategories();
+        if (!isset($_SESSION['user'])) {
+            $this->pages->render('Auth/loginForm');
+        } else {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if ($_POST['data']) {
+                    $product = Product::fromArray($_POST['data']);
+                    $product->sanitize();
+                    if ($product->validation()) {
+                        try {
+                            $categories = $this->categoryService->getAllCategories();
 
-                        $this->productService->registerProduct($product);
-                        $this->pages->render('Product/registerProduct', ['categories' => $categories]);
-                    } catch (Exception $e) {
-                        $_SESSION['register'] = 'Fail';
-                        $_SESSION['errors'] = $e->getMessage();
+                            $this->productService->registerProduct($product);
+                            $this->pages->render('Product/registerProduct', ['categories' => $categories]);
+                        } catch (Exception $e) {
+                            $_SESSION['register'] = 'Fail';
+                            $_SESSION['errors'] = $e->getMessage();
+                        }
+                    } else {
+                        $categories = $this->categoryService->getAllCategories();
+                        $_SESSION['registerProduct'] = 'Fail';
+                        $errores = Product::getErrores();
+                        $this->pages->render('Product/registerProduct', ['errores' => $errores, 'categories' => $categories]);
                     }
                 } else {
-                    $categories = $this->categoryService->getAllCategories();
-                    $_SESSION['registerProduct'] = 'Fail';
-                    $errores = Product::getErrores();
-                    $this->pages->render('Product/registerProduct', ['errores' => $errores, 'categories' => $categories]);
+                    $_SESSION['registerProduct'] = 'Fail'; // Si no hay datos
                 }
             } else {
-                $_SESSION['registerProduct'] = 'Fail'; // Si no hay datos
+                $categories = $this->categoryService->getAllCategories();
+                $this->pages->render('Product/registerProduct', ['categories' => $categories]);
             }
-        } else {
-            $categories = $this->categoryService->getAllCategories();
-            $this->pages->render('Product/registerProduct', ['categories' => $categories]);
         }
     }
 

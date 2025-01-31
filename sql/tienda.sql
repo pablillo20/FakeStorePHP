@@ -1,4 +1,4 @@
--- Active: 1732694002309@@127.0.0.1@3306@tienda
+-- Active: 1738236955484@@127.0.0.1@3306@tienda
 CREATE DATABASE tienda;
 SET NAMES UTF8;
 CREATE DATABASE IF NOT EXISTS tienda;
@@ -11,7 +11,10 @@ nombre          varchar(100) not null,
 apellidos       varchar(255),
 email           varchar(255) not null,
 password        varchar(255) not null,
-rol             varchar(20),
+rol             VARCHAR(20),
+confirmado      boolean not null default false,
+token           varchar(255),
+token_exp       datetime,
 CONSTRAINT pk_usuarios PRIMARY KEY(id),
 CONSTRAINT uq_email UNIQUE(email)  
 )ENGINE=InnoDb DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

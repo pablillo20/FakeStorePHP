@@ -1,15 +1,24 @@
 <?php return array(
     'root' => array(
         'name' => 'pablo/tienda',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => '786d02d4519a0a155050a033dba60d176f0b7706',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '376f910f05f90927a576b8880233ca54f805974f',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
+        'firebase/php-jwt' => array(
+            'pretty_version' => 'v6.11.0',
+            'version' => '6.11.0.0',
+            'reference' => '8f718f4dfc9c5d5f0c994cdfd103921b43592712',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../firebase/php-jwt',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'graham-campbell/result-type' => array(
             'pretty_version' => 'v1.1.3',
             'version' => '1.1.3.0',
@@ -20,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'pablo/tienda' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '786d02d4519a0a155050a033dba60d176f0b7706',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '376f910f05f90927a576b8880233ca54f805974f',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
