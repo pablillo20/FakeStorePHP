@@ -2,10 +2,12 @@
     namespace Lib;
     USE FPDF;
 
+    Use Models\Order;
+
 
     class PDF extends FPDF
     {
-        function generarPDF($order): string
+        public function generarPDF(Order $order, array $cartItems): string
     {
         $pdf = new Fpdf();
         $pdf->AddPage();
@@ -27,8 +29,8 @@
         $pdf->SetFont('Arial', 'B', 14);
         $pdf->Cell(0, 10, 'Productos:', 0, 1);
         $pdf->SetFont('Arial', '', 12);
-        foreach ($_SESSION['cart'] as $product) {
-            $pdf->Cell(0, 10, "{$product['nombre']} (x{$product['quantity']}): $" . ($product['precio'] * $product['quantity']), 0, 1);
+        foreach ($cartItems as $item) {
+            $pdf->Cell(0, 10, "Producto: " . $item['nombre'] . " - Cantidad: " . $item['cantidad'] . " - Precio: $" . $item['precio'], 0, 1);
         }
 
         // Guardar el PDF en memoria

@@ -23,13 +23,17 @@ class ProductController
 
     public function product()
     {
+        // Verifica si el usuario ha iniciado sesión
         if (!isset($_SESSION['user'])) {
             $this->pages->render('Auth/loginForm');
         } else {
+            // Verifica si la solicitud es POST
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // Verifica si los datos están presentes
                 if ($_POST['data']) {
                     $product = Product::fromArray($_POST['data']);
                     $product->sanitize();
+                    // Valida los datos del producto
                     if ($product->validation()) {
                         try {
                             $categories = $this->categoryService->getAllCategories();
@@ -58,7 +62,6 @@ class ProductController
 
     public function FilterProducts()
     {
-        // Verificar si es una solicitud POST y si se proporciona un ID de categoría válido
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['data']['categoria_id']) && $_POST['data']['categoria_id'] > 0) {
             $categoryId = $_POST['data']['categoria_id'];
             $products = $this->productService->getProductsByCategoryId($categoryId);
@@ -76,10 +79,9 @@ class ProductController
         ]);
     }
 
-
-
     public function AllProducts()
     {
+        // Verifica si el usuario ha iniciado sesión
         if (!isset($_SESSION['user'])) {
             $this->pages->render('Auth/loginForm');
         } else {
@@ -90,48 +92,48 @@ class ProductController
 
     public function editProducts($id)
     {
+        // Verifica si el usuario ha iniciado sesión
         if (!isset($_SESSION['user'])) {
             $this->pages->render('Auth/loginForm');
         } else {
-            if (!isset($_SESSION['user'])) {
-                $this->pages->render('Auth/loginForm');
-            } else {
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    if ($_POST['data']) {
-                        $product = Product::fromArray($_POST['data']);
-                        $product->sanitize();
-                        if ($product->validationEdit()) {
-                            try {
-                                $this->productService->updateProduct($product);
-                                $products = $this->productService->getAllProducts();
-                                $this->pages->render('Product/allProduct', ['products' => $products]);
-                                $_SESSION['edit'] = 'Success';
-                            } catch (Exception $e) {
-                                $_SESSION['edit'] = 'Fail';
-                                $_SESSION['errors'] = $e->getMessage();
-                            }
-                        } else {
-                            $_SESSION['editProduct'] = 'Fail';
-                            $errores = Product::getErrores();
-                            $categories = $this->categoryService->getAllCategories();
-                            $product = $this->productService->getProductById($id);
-                            $this->pages->render('Product/editProduct', ['product' => $product, 'errores' => $errores, 'categories' => $categories, 'id' => $id]);
+            // Verifica si la solicitud es POST
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // Verifica si los datos están presentes
+                if ($_POST['data']) {
+                    $product = Product::fromArray($_POST['data']);
+                    $product->sanitize();
+                    // Valida los datos del producto
+                    if ($product->validationEdit()) {
+                        try {
+                            $this->productService->updateProduct($product);
+                            $products = $this->productService->getAllProducts();
+                            $this->pages->render('Product/allProduct', ['products' => $products]);
+                            $_SESSION['edit'] = 'Success';
+                        } catch (Exception $e) {
+                            $_SESSION['edit'] = 'Fail';
+                            $_SESSION['errors'] = $e->getMessage();
                         }
                     } else {
-                        $_SESSION['editProduct'] = 'Fail'; // Si no hay datos
+                        $_SESSION['editProduct'] = 'Fail';
+                        $errores = Product::getErrores();
+                        $categories = $this->categoryService->getAllCategories();
+                        $product = $this->productService->getProductById($id);
+                        $this->pages->render('Product/editProduct', ['product' => $product, 'errores' => $errores, 'categories' => $categories, 'id' => $id]);
                     }
                 } else {
-                    if ($id) {
-                        $product = $this->productService->getProductById($id);
-                        if ($product) {
-                            $categories = $this->categoryService->getAllCategories();
-                            $this->pages->render('Product/editProduct', ['product' => $product, 'categories' => $categories]);
-                        } else {
-                            $_SESSION['editProduct'] = 'Fail'; // Si no se encuentra el producto
-                        }
+                    $_SESSION['editProduct'] = 'Fail'; // Si no hay datos
+                }
+            } else {
+                if ($id) {
+                    $product = $this->productService->getProductById($id);
+                    if ($product) {
+                        $categories = $this->categoryService->getAllCategories();
+                        $this->pages->render('Product/editProduct', ['product' => $product, 'categories' => $categories]);
                     } else {
-                        $_SESSION['editProduct'] = 'Fail'; // Si no hay ID de producto
+                        $_SESSION['editProduct'] = 'Fail'; // Si no se encuentra el producto
                     }
+                } else {
+                    $_SESSION['editProduct'] = 'Fail'; // Si no hay ID de producto
                 }
             }
         }
@@ -139,6 +141,7 @@ class ProductController
 
     public function DeleteProduct($id)
     {
+        // Verifica si la solicitud es GET
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             try {
                 $this->productService->DeleteProduct($id);

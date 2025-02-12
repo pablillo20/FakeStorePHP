@@ -14,19 +14,24 @@ class CategoryController
 
     public function __construct()
     {
+        // Inicializa las páginas y el servicio de categorías
         $this->pages = new Pages();
         $this->CategoryService = new CategoryService();
     }
 
     public function createCategory()
     {
+        // Verifica si el usuario ha iniciado sesión
         if (!isset($_SESSION['user'])) {
             $this->pages->render('Auth/loginForm');
         } else {
+            // Verifica si la solicitud es POST
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // Verifica si los datos están presentes
                 if ($_POST['data']) {
                     $category = Category::fromArray($_POST['data']);
                     $category->sanitize();
+                    // Valida los datos de la categoría
                     if ($category->validation()) {
                         try {
                             $this->CategoryService->registerCategory($category);

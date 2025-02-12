@@ -19,6 +19,23 @@ class Routes{
         });
 
         /*Auth Routes*/
+
+         Router::add('GET', '/requestPasswordReset', function(){
+            (new AuthController())->requestPasswordReset();
+        });
+
+        Router::add('POST', '/requestPasswordReset', function(){
+            (new AuthController())->requestPasswordReset();
+        });
+        
+        Router::add('GET', '/resetPassword/:token', function($token){
+            (new AuthController())->resetPassword($token);
+        });
+
+        Router::add('POST', '/resetPassword/:token', function($token){
+            (new AuthController())->resetPassword($token);
+        });
+
         Router::add('GET', '/confirmarCuenta/:token', function($token){
             (new AuthController())->confirmarCuenta($token);
         });
@@ -66,16 +83,14 @@ class Routes{
 
         Router::add('POST', '/editProducts/:id', function($id){
             (new ProductController())->editProducts($id);
-            
         });
 
         Router::add('GET', '/DeleteProduct/:id', function($id){
-            (new ProductController())->deleteProduct($id);
+            (new ProductController())->DeleteProduct($id);
         });
 
         Router::add('POST', '/DeleteProduct/:id', function($id){
             (new ProductController())->DeleteProduct($id);
-            
         });
 
         // Order Router

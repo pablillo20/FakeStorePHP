@@ -88,6 +88,8 @@ if (session_status() === PHP_SESSION_NONE) {
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
     </style>
+        <script src="https://www.paypal.com/sdk/js?client-id=AYQHnK5GXxmgtWFkmMi55h6SYrpjIjg7yGD3MzCfBqUIZZ0KIRFy_tziYmGyZWB40iPmC0OlhAIwNIXT"></script>
+            
 </head>
 
 <body>
@@ -103,12 +105,12 @@ if (session_status() === PHP_SESSION_NONE) {
             <?php } else { ?>
                 <!-- Mostrar cerrar sesión si el usuario está logueado -->
                 <li><a href="<?= BASE_URL ?>logout">Cerrar Sesión</a></li>
-                <li><a href="<?= BASE_URL ?>ShowCart">Carrito</a></li>
                 <li><a href="<?= BASE_URL ?>showOrders">Mis Pedidos</a></li>
             <?php } ?>
 
             <!-- Lista de productos está siempre disponible -->
             <li><a href="<?= BASE_URL ?>FilterProducts">Lista de Productos</a></li>
+            <li><a href="<?= BASE_URL ?>ShowCart">Carrito</a></li>
 
             <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === 1) { ?>
                 <!-- Mostrar "Registrar Productos" solo si el usuario es admin -->

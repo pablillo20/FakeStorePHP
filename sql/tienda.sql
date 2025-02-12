@@ -1,4 +1,4 @@
--- Active: 1738236955484@@127.0.0.1@3306@tienda
+-- Active: 1738742746480@@127.0.0.1@3306@tienda
 CREATE DATABASE tienda;
 SET NAMES UTF8;
 CREATE DATABASE IF NOT EXISTS tienda;
@@ -14,11 +14,11 @@ password        varchar(255) not null,
 rol             VARCHAR(20),
 confirmado      boolean not null default false,
 token           varchar(255),
+token_recuperacion varchar(255),
 token_exp       datetime,
 CONSTRAINT pk_usuarios PRIMARY KEY(id),
 CONSTRAINT uq_email UNIQUE(email)  
 )ENGINE=InnoDb DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
 
 DROP TABLE IF EXISTS categorias;
 CREATE TABLE IF NOT EXISTS categorias(
@@ -69,8 +69,27 @@ CONSTRAINT fk_linea_pedido FOREIGN KEY(pedido_id) REFERENCES pedidos(id),
 CONSTRAINT fk_linea_producto FOREIGN KEY(producto_id) REFERENCES productos(id)
 )ENGINE=InnoDb DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+DROP TABLE IF EXISTS tokens;
+CREATE TABLE IF NOT EXISTS tokens(
+    unique_id VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    PRIMARY KEY (unique_id)
+) ENGINE=InnoDb DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+DROP TABLE IF EXISTS carrito;
+CREATE TABLE IF NOT EXISTS carrito(
+    id INT(255) AUTO_INCREMENT NOT NULL,
+    usuario_id INT(255) NOT NULL,
+    producto_id INT(255) NOT NULL,
+    cantidad INT(255) NOT NULL,
+    CONSTRAINT pk_carrito PRIMARY KEY(id),
+    CONSTRAINT fk_carrito_usuario FOREIGN KEY(usuario_id) REFERENCES usuarios(id),
+    CONSTRAINT fk_carrito_producto FOREIGN KEY(producto_id) REFERENCES productos(id)
+) ENGINE=InnoDb DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+SELECT * FROM carrito;
+
+SELECT * FROM tokens;
 SELECT * FROM usuarios;
 
 SELECT * FROM productos;
@@ -84,6 +103,10 @@ SELECT * FROM lineas_pedidos;
 -- Insertar una categoria
 INSERT INTO categorias VALUES(1, 'Calzado');
 INSERT INTO categorias (nombre) VALUES( "zapas");
+
+SELECT COUNT(*) FROM carrito where producto_id = 4;
+
+
 
 
 

@@ -1,4 +1,4 @@
-<form action="<?= BASE_URL ?>createOrder" method="post">
+<form action="<?= BASE_URL ?>createOrder" id="pago" method="post">
     <label for="provincia">Provincia:</label>
     <input type="text" id="provincia" name="data[provincia]"><br><br>
     <?php if (isset($errors['provincia'])): ?>
@@ -25,9 +25,48 @@
         <?php $_SESSION['fallos'] = null; ?>
     <?php endif; ?>
 
-    <input type="submit" value="Enviar">
-
+    <div id="paypal-button-container" style="display: none;"></div>
+    
 </form>
+
+<script>
+    function checkFormFields() {
+        const provincia = document.getElementById('provincia').value.trim();
+        const localidad = document.getElementById('localidad').value.trim();
+        const direccion = document.getElementById('direccion').value.trim();
+
+        if (provincia && localidad && direccion) {
+            document.getElementById('paypal-button-container').style.display = 'block';
+        } else {
+            document.getElementById('paypal-button-container').style.display = 'none';
+        }
+    }
+
+    document.getElementById('provincia').addEventListener('input', checkFormFields);
+    document.getElementById('localidad').addEventListener('input', checkFormFields);
+    document.getElementById('direccion').addEventListener('input', checkFormFields);
+
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: <?= $precio ?>
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                document.querySelector('#pago').submit();
+            });
+        },
+        onCancel: function(data) {
+            alert("Pago Cancelado");
+            console.log(data);
+        }
+    }).render('#paypal-button-container');
+</script>
 
 <style>
     /* Estilos generales del formulario */

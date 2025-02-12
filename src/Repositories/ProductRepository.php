@@ -19,7 +19,8 @@ class ProductRepository{
 
     public function registerProduct(Product $product):bool{
         try{
-            $insert = $this->db->prepare("INSERT INTO productos (categoria_id, nombre, descripcion, precio, stock, oferta, fecha, imagen) VALUES (:categoria_id, :nombre, :descripcion, :precio, :stock, :oferta, :fecha, :imagen)"); 
+            $insert = $this->db->prepare("INSERT INTO productos (id, categoria_id, nombre, descripcion, precio, stock, oferta, fecha, imagen) VALUES (:id, :categoria_id, :nombre, :descripcion, :precio, :stock, :oferta, :fecha, :imagen)"); 
+            $insert->bindValue(":id", $product->getId(), PDO::PARAM_INT);
             $insert->bindValue(":categoria_id", $product->getCategoriaId(), PDO::PARAM_INT);
             $insert->bindValue(":nombre", $product->getNombre(), PDO::PARAM_STR);
             $insert->bindValue(":descripcion", $product->getDescripcion(), PDO::PARAM_STR);
@@ -134,6 +135,23 @@ class ProductRepository{
         }finally{
             if(isset($query)){
                 $query->closeCursor();
+            }
+        }
+    }
+
+    public function decreaseStock(int $productId, int $quantity): bool {
+        try {
+            $update = $this->db->prepare("UPDATE productos SET stock = stock - :quantity WHERE id = :id");
+            $update->bindValue(":quantity", $quantity, PDO::PARAM_INT);
+            $update->bindValue(":id", $productId, PDO::PARAM_INT);
+            $update->execute();
+            return true;
+        } catch (PDOException $e) {
+            error_log("Error al disminuir el stock del producto: " . $e->getMessage());
+            return false;
+        } finally {
+            if (isset($update)) {
+                $update->closeCursor();
             }
         }
     }

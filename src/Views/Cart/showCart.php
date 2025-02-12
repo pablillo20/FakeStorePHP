@@ -1,8 +1,9 @@
 <?php
-$cart = $_SESSION['cart'] ?? [];
+$cartItems = $cartItems ?? [];
 ?>
+
 <h1>Carrito de Compras</h1>
-<?php if (!empty($cart)): ?>
+<?php if (!empty($cartItems)): ?>
     <table>
         <thead>
             <tr>
@@ -15,27 +16,25 @@ $cart = $_SESSION['cart'] ?? [];
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($cart as $productId => $product): ?>
+            <?php foreach ($cartItems as $product): ?>
                 <tr>
                     <td><img src="<?= $product['imagen'] ?>" alt="<?= $product['nombre'] ?>" width="50"></td>
                     <td><?= $product['nombre'] ?></td>
                     <td><?= $product['precio'] ?></td>
-                    <td><?= $product['quantity'] ?></td>
-                    <td><?= $product['precio'] * $product['quantity'] ?></td>
+                    <!-- Verificamos si el usuario está logueado o no -->
+                    <td><?= isset($_SESSION['user']) ? $product['cantidad'] : $product['quantity'] ?></td> <!-- Usamos 'cantidad' si está logueado, 'quantity' si no -->
+                    <td><?= $product['precio'] * (isset($_SESSION['user']) ? $product['cantidad'] : $product['quantity']) ?></td> <!-- Lo mismo para el total -->
                     <td>
-
                         <form action="<?= BASE_URL ?>updateCart" method="post" style="display:inline;">
-                            <input type="hidden" name="product_id" value="<?= $productId ?>">
+                            <input type="hidden" name="product_id" value="<?= isset($_SESSION['user']) ? $product['producto_id'] : $product['id'] ?>">
                             <input type="hidden" name="action" value="decrease">
                             <button type="submit">-</button>
                         </form>
-
                         <form action="<?= BASE_URL ?>updateCart" method="post" style="display:inline;">
-                            <input type="hidden" name="product_id" value="<?= $productId ?>">
+                            <input type="hidden" name="product_id" value="<?= isset($_SESSION['user']) ? $product['producto_id'] : $product['id'] ?>">
                             <input type="hidden" name="action" value="increase">
                             <button type="submit">+</button>
                         </form>
-
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -83,7 +82,7 @@ $cart = $_SESSION['cart'] ?? [];
         border-radius: 5px;
     }
 
-    .boton{
+    .boton {
         display: block;
         width: 100px;
         margin: 20px auto;
@@ -94,6 +93,7 @@ $cart = $_SESSION['cart'] ?? [];
         text-decoration: none;
         border-radius: 5px;
     }
+
     /* Botones de acciones */
     form button {
         background-color: #3498db;

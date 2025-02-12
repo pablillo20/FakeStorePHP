@@ -35,11 +35,7 @@ class ProductService{
         return $this->ProductRepository->DeleteProduct($id);
     }
 
-    public function decreaseStock(int $productId, int $quantity): void {
-        $product = $this->getProductById($productId);
-        if ($product) {
-            $product->setStock($product->getStock() - $quantity);
-            $this->updateProduct($product);
-        }
+    public function decreaseStock(int $productId, int $quantity): bool {
+        return $this->ProductRepository->decreaseStock($productId,$quantity);
     }
 }

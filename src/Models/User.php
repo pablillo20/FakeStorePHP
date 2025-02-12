@@ -16,7 +16,8 @@ class User
         private string $role,
         private bool $confirmado,
         private string $token,
-        private string $token_exp
+        private string $token_exp,
+        private string|null $token_recuperacion = null
         ) {}
 
 
@@ -32,7 +33,7 @@ class User
         $this->token = $token;
         }
 
-        public function setTokenExp(int $token_exp): void
+        public function setTokenExp(string $token_exp): void
         {
         $this->token_exp = $token_exp;
         }
@@ -47,12 +48,22 @@ class User
         return $this->token;
         }
 
-        public function getTokenExp(): int
+        public function getTokenExp(): string
         {
         return $this->token_exp;
         }
+
+       
+
+        public function getTokenRecuperacion(): ?string {
+            return $this->token_recuperacion;
+        }
     // SETTERS
 
+    public function setTokenRecuperacion(?string $token_recuperacion): void {
+        $this->token_recuperacion = $token_recuperacion;
+    }
+    
     public function setId(int $id): void
     {
         $this->id = $id;
@@ -191,9 +202,10 @@ class User
             email: $data['email'] ?? '',
             password: $data['password'] ?? '',
             role: $data['rol'] ?? 'usuario',
-            confirmado: $data['confirmado'] ?? False,
-            token: $data['token'] ?? '' ,
-            token_exp: $data['token_exp'] ?? 0,
+            confirmado: $data['confirmado'] ?? false,
+            token: $data['token'] ?? '',
+            token_exp: $data['token_exp'] ?? '',
+            token_recuperacion: $data['token_recuperacion'] ?? null
         );
     }
 }

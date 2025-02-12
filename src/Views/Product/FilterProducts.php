@@ -32,7 +32,7 @@
 
                     <form action="<?= BASE_URL ?>AddCart" method="post" style="display: inline;">
                         <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-                        <button type="submit">Comprar</button>
+                        <button type="submit">Añadir al Carrito</button>
                     </form>
                 </div>
             </div>
@@ -42,6 +42,16 @@
     <p>No se encontraron productos en esta categoría.</p>
 <?php endif; ?>
 
+<!-- Modal para mensajes de error o éxito -->
+<?php if (isset($_SESSION['error']) || isset($_SESSION['success'])): ?>
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <p><?= $_SESSION['error'] ?? $_SESSION['success'] ?></p>
+        </div>
+    </div>
+    <?php unset($_SESSION['error'], $_SESSION['success']); ?>
+<?php endif; ?>
 
 <style>
 form {
@@ -180,4 +190,62 @@ form button:hover {
     color: #555;
     margin-top: 20px;
 }
+
+/* Estilos para el modal */
+.modal {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var modal = document.getElementById('messageModal');
+    var closeButton = document.querySelector('.close-button');
+
+    if (modal) {
+        closeButton.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    }
+});
+</script>

@@ -36,21 +36,53 @@ class Security
         return JWT::encode($token, $key, 'HS256');
     }
 
+    final public static function crearTokenRecuperacion(string $key, array $data): string
+    {
+        $time = strtotime('now');
+        $token = array(
+            'iat' => $time,
+            'exp' => $time + 1800, // 30 minutos
+            'data' => $data
+        );
+        return JWT::encode($token, $key, 'HS256');
+    }
 
     final public static function validateToken($token): bool
     {
-        $info = JWT::decode($token, new Key(Security::secretKey(), 'HS256'));
-        // die(var_dump($info));
-        $exp = $info->exp;
-        $email = $info->data[0];
+        try {
+            $info = JWT::decode($token, new Key(Security::secretKey(), 'HS256'));
+            $exp = $info->exp;
+            $email = $info->data[0];
 
-        $usuario = new UserService();
-        $user = $usuario->login($email);
+            if ($exp < time()) {
+                return false;
+            }
 
-        if ($user && $user->getToken() == $token) {
-            $usuario->actualizar($user->getEmail());
-            return true;
-        } else {
+            $usuario = new UserService();
+            $user = $usuario->login($email);
+
+            return $user && $user->getToken() === $token;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    final public static function validateTokenRecuperacion($token): bool
+    {
+        try {
+            $info = JWT::decode($token, new Key(Security::secretKey(), 'HS256'));
+            $exp = $info->exp;
+            $email = $info->data[0];
+
+            if ($exp < time()) {
+                return false;
+            }
+
+            $usuario = new UserService();
+            $user = $usuario->getUserByEmail($email);
+
+            return $user && $user->getTokenRecuperacion() === $token;
+        } catch (\Exception $e) {
             return false;
         }
     }
